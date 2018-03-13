@@ -1,0 +1,198 @@
+﻿
+@model EficienciaEnergetica.Models.Sede
+
+@{
+    ViewBag.Title = "Sede";
+}
+<style>
+    .input-group-addon {
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-top: -6px;
+    }
+</style>
+<br />
+
+@using (Html.BeginForm("Create", "Sedes", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row wrapper border-bottom white-bg page-headingl">
+
+        <div class="row form-fl-title">
+            <div class="col-lg-12">
+                <h2>Nueva Sede</h2>
+                <input type="button" value="Copiar Datos de la Empresa" class="btn btn-warning pull-right" onclick="CloneCompanyInfo(); return false;" style="margin-top:-40px;" title="Obtener la información de la empresa actualmente seleccionada y asignarla en los campos actuales" />
+            </div>
+        </div>
+
+        <br />
+        @Html.ValidationSummary(true, "Advertencias: ", new { @class = "text-danger" })
+        <br />
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NombreSede, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                    @Html.EditorFor(model => model.NombreSede, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.NombreSede, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Responsable, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user-circle-o"></i></span>
+                    @Html.EditorFor(model => model.Responsable, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Responsable, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estrato, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-list-ol"></i></span>
+                    @Html.EditorFor(model => model.Estrato, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Estrato, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CiudadID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-university"></i></span>
+                    @Html.DropDownList("CiudadID", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                    @Html.ValidationMessageFor(model => model.CiudadID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Direccion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                    @Html.EditorFor(model => model.Direccion, new Dictionary<string, Object> { { "class", "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                    @Html.EditorFor(model => model.Telefono, new Dictionary<string, Object> { { "class", "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Celular, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+                    @Html.EditorFor(model => model.Celular, new Dictionary<string, Object> { { "class", "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Celular, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                    @Html.EditorFor(model => model.Email, new Dictionary<string, Object> { { "class", "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.EmpresaID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-bullseye"></i></span>
+                        @Html.DropDownList("EmpresaID", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                        @Html.ValidationMessageFor(model => model.EmpresaID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default btn-md" })
+                <input type="submit" value="Guardar" class="btn btn-primary btn-md" />
+            </div>
+        </div>
+
+        <br />
+
+        <div>
+            @Html.ActionLink("Regresar a la lista", "Index")
+        </div>
+
+        <br />
+
+    </div>
+}
+
+
+@section Styles {
+    @Styles.Render("~/bundles/bootstrapselect/css/")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrapselect")
+}
+
+<script type="text/javascript">
+    function CloneCompanyInfo() {
+        var CompanyId = $('#EmpresaID').val();
+
+        @if (!EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+        {
+            @: CompanyId = @EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.EmpresaID;
+                }
+
+        if (CompanyId) {
+            $.ajax({
+                url: '@Url.Action("GetCompanyInfo")',
+                data: { id: CompanyId },
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            $('#Direccion').val(data.Adrress);
+                            $('#Telefono').val(data.Phone);
+                            $('#Celular').val(data.Mobile);
+                            $('#Email').val(data.Email);
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error ejecutando la acción. Por favor inténtelo de nuevo.");
+                }
+            });
+        }
+        else {
+            alert("No se reconoce una compañía seleccionada. Por favor inténtelo de nuevo.");
+        }
+    }
+</script>

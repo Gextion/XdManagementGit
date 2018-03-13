@@ -1,0 +1,32 @@
+﻿
+@model EficienciaEnergetica.Models.TiposEquipos
+
+@{
+    ViewBag.Title = "TiposEquipo";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Tipo de Equipo</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreTipoEquipo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreTipoEquipo)
+        </dd>
+
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.TipoEquipoID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+

@@ -1,0 +1,121 @@
+﻿<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;">
+        <div class="sidebar-collapse" style="overflow-x: hidden; overflow-y: auto; width: auto; height: 100%;">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.Empresa != null && !String.IsNullOrEmpty(EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.Empresa.LogoUrl))
+                        {
+                            <span>
+                                <img id="@EficienciaEnergetica.Helpers.ApplicationContext.LogoEditorID" alt="Logo Empresa" src="@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.Empresa.LogoUrl" width="170" style="border-radius: 5px;" />
+                            </span>
+                        }
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear">
+                                <span class="block m-t-xs">
+                                    <strong class="font-bold">@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.FullName</strong>
+                                </span>
+                                <span class="text-muted text-xs block">@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.RolName<b class="caret"></b></span>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a href="/account/edit/@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.Id">Editar Perfil</a></li>
+                            <li><a href="@Url.Action("LogOff", "Authentication")">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">
+                        XdManagement
+                    </div>
+                </li>
+
+                @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin || EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsAdmin)
+                {
+                    <li class="@Html.IsSelected(controller: "empresas", action: "index")"><a href="@Url.Action("Index", "Empresas")"><i class="fa fa-industry"></i>Empresas</a></li>
+                }
+
+                <li class="@Html.IsSelected(controller: "sedes", action: "index")"><a href="@Url.Action("Index", "Sedes")"><i class="fa fa-home"></i>Sedes</a></li>
+                <li class="@Html.IsSelected(controller: "dispositivos", action: "index")"><a href="@Url.Action("Index", "Dispositivos")"><i class="fa fa-tachometer"></i>Medidores</a></li>
+                <li class="@Html.IsSelected(controller: "consumos", action: "index")"><a href="@Url.Action("Index", "Consumos")"><i class="fa fa-snowflake-o"></i>Consumos</a></li>
+
+                @if (@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin || @EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsAdmin)
+                {
+                    <li class="@Html.IsSelected(controller: "inventarios", action: "index")"><a href="@Url.Action("Index", "Inventarios")"><i class="fa fa-tasks"></i>Inventario de Equipos</a></li>
+                }
+
+                @if (@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+                {
+                    <li class="@Html.IsSelected(controller: "ciudades", controller2: "sectoreseconomicos", controller3: "fuentesenergeticas", controller4: "periodosfacturacion", controller5: "niveltermico", controller6: "asesores")">
+                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label" data-i18n="nav.menulevels">Tablas </span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li class="@Html.IsSelected(controller: "accionahorro", action: "index")"><a href="@Url.Action("Index", "AccionAhorro")"><i class="fa fa-cog"></i>Acciones de Ahorro</a></li>
+                            <li class="@Html.IsSelected(controller: "asesores", action: "index")"><a href="@Url.Action("Index", "Asesores")"><i class="fa fa-group"></i>Asesores</a></li>
+                            <li class="@Html.IsSelected(controller: "ciudades", action: "index")"><a href="@Url.Action("Index", "Ciudades")"><i class="fa fa-university"></i>Ciudades</a></li>
+                            <li class="@Html.IsSelected(controller: "equipos", action: "index")"><a href="@Url.Action("Index", "Equipos")"><i class="fa fa-cog"></i>Equipos</a></li>
+                            <li class="@Html.IsSelected(controller: "fuentesenergeticas", action: "index")"><a href="@Url.Action("Index", "FuentesEnergeticas")"><i class="fa fa-battery-three-quarters"></i>Fuentes Energéticas</a></li>
+                            <li class="@Html.IsSelected(controller: "niveltermico", action: "index")"><a href="@Url.Action("Index", "NivelTermico")"><i class="fa fa-thermometer-3"></i>Niveles Térmicos</a></li>
+                            <li class="@Html.IsSelected(controller: "periodosfacturacion", action: "index")"><a href="@Url.Action("Index", "PeriodosFacturacion")"><i class="fa fa-calendar"></i>Periodos Facturación</a></li>
+                            <li class="@Html.IsSelected(controller: "sectoreseconomicos", action: "index")"><a href="@Url.Action("Index", "SectoresEconomicos")"><i class="fa fa-money"></i>Sectores Económicos</a></li>
+                            <li class="@Html.IsSelected(controller: "tiposequipos", action: "index")"><a href="@Url.Action("Index", "TiposEquipos")"><i class="fa fa-industry"></i>Tipos de Equipos</a></li>
+                        </ul>
+                    </li>
+                }
+
+                <li class="@Html.IsSelected(controller: "peticiones", action: "index")"><a href="@Url.Action("Index", "Peticiones")"><i class="fa fa-question-circle-o"></i>PQR's</a></li>
+
+                <li class="@Html.IsSelected(controller: "reports")">
+                    <a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label" data-i18n="nav.menulevels">Reportes </span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li class="@Html.IsSelected(controller: "reports", action: "consumos")">
+                            <a href="@Url.Action("Consumos", "Reports")">Consumos</a>
+                        </li>
+                        <li class="@Html.IsSelected(controller: "reports", action: "ahorroacumulado")">
+                            <a href="@Url.Action("AhorroAcumulado", "Reports")">Ahorro Acumulado</a>
+                        </li>
+                        @if (@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+                        {
+                            <li class="@Html.IsSelected(controller: "reports", action: "empresas")">
+                                <a href="@Url.Action("Empresas", "Reports")">Empresas</a>
+                            </li>
+                            <li class="@Html.IsSelected(controller: "reports", action: "sedes")">
+                                <a href="@Url.Action("Sedes", "Reports")">Sedes</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+                @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+                {
+                    <li class="@Html.IsSelected(controller: "authentication", action: "audit")"><a href="@Url.Action("Audit", "Authentication")"><i class="fa fa-lock"></i>Auditoría de Ingresos</a></li>
+                }
+
+                @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin || EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsAdmin)
+                {
+                    <li class="@Html.IsSelected(controller: "account", controller2: "groups", controller3: "roles")">
+                        <a href="#"><i class="fa fa-cog"></i> <span class="nav-label" data-i18n="nav.menulevels">Configuración </span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li class="@Html.IsSelected(controller: "account", controller2: "groups", controller3: "roles")">
+                                <a href="#"><i class="fa fa-shield"></i> Seguridad <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li class="@Html.IsSelected(controller: "account", action: "index")">
+                                        <a href="@Url.Action("Index", "Account")">Usuarios</a>
+                                    </li>
+                                    @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+                                    {
+                                        <li class="@Html.IsSelected(controller: "groups", action: "index")">
+                                            <a href="@Url.Action("Index", "Groups")">Roles</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "roles", action: "index")">
+                                            <a href="@Url.Action("Index", "Roles")">Permisos</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 76.6488px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.9; z-index: 90; right: 1px;">
+        </div>
+    </div>
+</nav>

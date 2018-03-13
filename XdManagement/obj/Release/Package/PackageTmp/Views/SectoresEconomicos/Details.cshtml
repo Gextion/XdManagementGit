@@ -1,0 +1,32 @@
+﻿
+@model EficienciaEnergetica.Models.SectoresEconomicos
+
+@{
+    ViewBag.Title = "Sectores Económicos";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Sector Económico</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SectorEconomico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SectorEconomico)
+        </dd>
+
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.SectorEconomicoID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+

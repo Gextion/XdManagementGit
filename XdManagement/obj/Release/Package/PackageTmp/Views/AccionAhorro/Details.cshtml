@@ -1,0 +1,40 @@
+﻿
+@model EficienciaEnergetica.Models.AccionAhorro
+
+@{
+    ViewBag.Title = "Acción de Ahorro";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Acción de Ahorro</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DescripcionAccionAhorro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DescripcionAccionAhorro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoEquipo.NombreTipoEquipo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoEquipo.NombreTipoEquipo )
+        </dd>
+
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.AccionAhorroID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+

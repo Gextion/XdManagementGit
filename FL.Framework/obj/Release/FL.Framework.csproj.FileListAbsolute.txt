@@ -1,0 +1,5 @@
+E:\Proyectos\XdManagement\FL.Framework\bin\Release\FL.Framework.dll
+E:\Proyectos\XdManagement\FL.Framework\bin\Release\FL.Framework.pdb
+E:\Proyectos\XdManagement\FL.Framework\obj\Release\FL.Framework.csprojResolveAssemblyReference.cache
+E:\Proyectos\XdManagement\FL.Framework\obj\Release\FL.Framework.dll
+E:\Proyectos\XdManagement\FL.Framework\obj\Release\FL.Framework.pdb

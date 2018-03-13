@@ -1,0 +1,158 @@
+﻿
+@model EficienciaEnergetica.Models.Peticion
+
+@{
+    ViewBag.Title = "Petición";
+}
+<style>
+    .input-group-addon {
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-top: -8px;
+    }
+</style>
+<br />
+
+@using (Html.BeginForm("Edit", "Peticiones", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row wrapper border-bottom white-bg page-headingl">
+        <div class="row form-fl-title">
+            <h2>Editar Petición</h2>
+        </div>
+
+        <br />
+        @Html.ValidationSummary(true, "Advertencias: ", new { @class = "text-danger" })
+        <br />
+
+        @Html.HiddenFor(model => model.PeticionID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FechaRegistro, htmlAttributes: new { @class = "control-label col-md-2" })            
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-bullseye"></i></span>
+                    @Html.EditorFor(model => model.FechaRegistro, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.FechaRegistro, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EmpresaID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-bullseye"></i></span>
+                    @Html.DropDownList("EmpresaID", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                    @Html.ValidationMessageFor(model => model.EmpresaID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Titulo, htmlAttributes: new { @class = "control-label col-md-2" })            
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-font"></i></span>
+                    @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Titulo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })            
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-align-justify"></i></span>
+                    @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoPeticion, htmlAttributes: new { @class = "control-label col-md-2" })            
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-comments-o"></i></span>
+                    @Html.EnumDropDownListFor(model => model.TipoPeticion, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                    @Html.ValidationMessageFor(model => model.TipoPeticion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FechaSolucion, htmlAttributes: new { @class = "control-label col-md-2" })            
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    @Html.EditorFor(model => model.FechaSolucion, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.FechaSolucion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Solucion, htmlAttributes: new { @class = "control-label col-md-2" })            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-commenting-o"></i></span>
+                    @Html.EditorFor(model => model.Solucion, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Solucion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ResueltaPor, htmlAttributes: new { @class = "control-label col-md-2" })            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user-o"></i></span>
+                    @Html.EditorFor(model => model.ResueltaPor, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ResueltaPor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserID, htmlAttributes: new { @class = "control-label col-md-2" })            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user-o"></i></span>
+                    @Html.EditorFor(model => model.UserID, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default btn-md" })
+                <input type="submit" value="Guardar" class="btn btn-primary btn-md" />
+            </div>
+        </div>
+
+        <br />
+
+        <div>
+            @Html.ActionLink("Regresar a la lista", "Index")
+        </div>
+
+        <br />
+
+    </div>
+}
+
+
+@section Styles {
+    @Styles.Render("~/bundles/bootstrapselect/css/")
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrapselect")
+}

@@ -1,0 +1,64 @@
+﻿
+@model EficienciaEnergetica.Models.Dispositivo
+
+@{
+    ViewBag.Title = "Medidor";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Medidor</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Fuente.Fuente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fuente.Fuente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PeriodosFacturacion.Periodo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PeriodosFacturacion.Periodo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sede.NombreSede)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sede.NombreSede)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LineaBase)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LineaBase)
+        </dd>
+
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.DispositivoID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+

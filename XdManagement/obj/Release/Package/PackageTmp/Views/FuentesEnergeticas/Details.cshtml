@@ -1,0 +1,39 @@
+﻿@model EficienciaEnergetica.Models.FuenteEnergetica
+
+@{
+    ViewBag.Title = "Fuente Energética";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Fuente Energética</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Fuente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fuente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UnidadMedida)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UnidadMedida)
+        </dd>
+
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.FuenteID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+

@@ -1,0 +1,75 @@
+﻿@model EficienciaEnergetica.Models.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'" />
+
+    <title>XdManagement | Inicio de Sesión</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+</head>
+
+<body class="login-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <br />
+
+            @using (Html.BeginForm("Authenticate", "Authentication", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @role = "form" }))
+            {
+                if (Model.HaveEmpresa)
+                {
+                    <center><h2 style="color: white">@Model.DisplayLoginCaption</h2></center>
+                    <br />
+                    <center><img id="@Model.ImageEditorID" src="@Model.EmpresaLogoURL" width="250" style="border-radius: 5px;" /></center>
+                }
+                else
+                {
+                    <center><img id="@Model.ImageEditorID" src="~/Images/i2e.png" width="250" style="border-radius: 5px;"/></center>
+                }
+
+                <br />
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "Errores: ", new { @style = "color: white; text-align: left; " })
+                
+                <br />
+
+                <div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Usuario", @required = "", @maxlength = "10" })
+                    </div>
+                    <div class="form-group">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Contraseña", @type = "password", @required = "" })
+                    </div>
+                    <div class="form-group" style="text-align: left;">
+                        @Html.ActionLink("Olvidé mi contraseña", "ForgotPwd", null, new { @style = "color: white; margin-left: 0px;" })
+                    </div>
+
+                    <input type="submit" value="Iniciar Sesión" class="btn btn-primary block full-width m-b" />
+                </div>
+            }
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $("input[type=text]").first().focus();
+        });
+    </script>
+
+</body>
+</html>

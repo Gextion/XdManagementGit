@@ -1,0 +1,279 @@
+﻿
+@model EficienciaEnergetica.Models.Consumo
+
+@{
+    ViewBag.Title = "Consumo";
+}
+<style>
+    .input-group-addon {
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-top: -6px;
+    }
+</style>
+<br />
+
+@using (Html.BeginForm("Create", "Consumos", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row wrapper border-bottom white-bg page-headingl">
+        <div class="row form-fl-title">
+            <h2>Nuevo Consumo</h2>
+        </div>
+
+        <br />
+        @Html.ValidationSummary(true, "Advertencias: ", new { @class = "text-danger" })
+        <br />
+
+        <div class="row wrapper">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SedeID, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-university"></i></span>
+                            @Html.DropDownList("SedeID", null, "(Seleccione Sede)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" }, { "onchange", "javascript:FillDevices(this.value);" } })
+                            @Html.ValidationMessageFor(model => model.SedeID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DispositivoID, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-tachometer"></i></span>
+                            @Html.DropDownList("DispositivoID", null, "(Seleccione Medidor)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                            @Html.ValidationMessageFor(model => model.DispositivoID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaInicial, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            @Html.EditorFor(model => model.FechaInicial, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.FechaInicial, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaFinal, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            @Html.EditorFor(model => model.FechaFinal, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.FechaFinal, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LineaBase, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-pie-chart"></i></span>
+                            @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+                            {
+                                @Html.EditorFor(model => model.LineaBase, new { htmlAttributes = new { @class = "form-control" } })
+                            }
+                            else
+                            {
+                                @Html.EditorFor(model => model.LineaBase, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            }
+                            @Html.ValidationMessageFor(model => model.LineaBase, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PeriodoFacturacion, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            @Html.EditorFor(model => model.PeriodoFacturacion, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.PeriodoFacturacion, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConsumoPeriodo, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span id="UnidadMedida" class="input-group-addon">Unidad</span>
+                            @Html.EditorFor(model => model.ConsumoPeriodo, new { htmlAttributes = new { @class = "form-control", @style = "text-align: right;" } })
+                            @Html.ValidationMessageFor(model => model.ConsumoPeriodo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Valor, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            @Html.EditorFor(model => model.Valor, new { htmlAttributes = new { @class = "form-control", @style = "text-align: right;" } })
+                            @Html.ValidationMessageFor(model => model.Valor, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ValorUnitario, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            @Html.EditorFor(model => model.ValorUnitario, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @style = "text-align: right;" } })
+                            @Html.ValidationMessageFor(model => model.ValorUnitario, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="ibox float-e-margins">
+                    <h3>Últimos Consumos Registrados</h3>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTables-example" id="devicedata" style="width:100%">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-8">
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default btn-md" })
+                <input type="submit" value="Guardar" class="btn btn-primary btn-md" />
+            </div>
+        </div>
+
+        <br />
+
+        <div>
+            @Html.ActionLink("Regresar a la lista", "Index")
+        </div>
+
+        <br />
+    </div>
+}
+
+@section Styles {
+    @Styles.Render("~/bundles/bootstrapselect/css/")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrapselect")
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#DispositivoID').on('change', function () {
+            GetLastConsumption(true);
+        })
+
+        $('#Valor').on('change', function () {
+            CalcUnitValue();
+        })
+
+        $('#ConsumoPeriodo').on('change', function () {
+            CalcUnitValue();
+        })
+
+        GetLastConsumption(null);
+    });
+
+    function CalcUnitValue() {
+        var Value = $('#Valor').val();
+        var Consume = $('#ConsumoPeriodo').val();
+
+        if (Consume > 0) {
+            $('#ValorUnitario').val((Value / Consume).toFixed(2));
+        }
+        else {
+            $('#ValorUnitario').val(0);
+        }
+    }
+
+    function FillDevices(_sedeID) {
+
+        if (_sedeID) {
+            var procemessage = "<option value='0'> Consultando ...</option>";
+            $("#DispositivoID").html(procemessage).show().selectpicker('refresh');
+
+            $.ajax({
+                url: '@Url.Action("GetDeviceBySedeId")',
+                data: { sedeID: _sedeID },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            var markup = "<option value='0'>Seleccione Medidor</option>";
+                            for (var x = 0; x < data.List.length; x++) {
+                                markup += "<option value=" + data.List[x].Value + ">" + data.List[x].Text + "</option>";
+                            }
+                            $("#DispositivoID").html(markup).selectpicker('refresh');
+                        }
+                    }
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+    }
+
+    function GetLastConsumption(replacebaseline) {
+        var DeviceId = $('#DispositivoID').val();
+        if (DeviceId) {
+            $.ajax({
+                url: '@Url.Action("GetLastConsumption")',
+                data: { id: DeviceId },
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            if (data.HtmlRow != '') {
+                                $('#devicedata').html(data.HtmlRow);
+                                $('#UnidadMedida').text(data.Uni);
+
+                                if (replacebaseline)
+                                    $('#LineaBase').val(data.LinBase);
+
+                                $('#PeriodoFacturacion').val(data.Per);
+                            }
+                            else {
+                                clearTableContent();
+                            }
+                        }
+                        else {
+                            clearTableContent();
+                        }
+                    }
+                    else {
+                        clearTableContent();
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error ejecutando la acción de eliminar. Por favor inténtelo de nuevo.");
+                    clearTableContent();
+                }
+            });
+        }
+    }
+
+    function clearTableContent() {
+        $("#devicedata").fadeOut("normal", function () { $(this).empty(); });
+    }
+</script>

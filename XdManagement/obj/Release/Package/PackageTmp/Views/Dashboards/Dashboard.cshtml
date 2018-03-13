@@ -1,0 +1,322 @@
+﻿@model EficienciaEnergetica.Models.Dashboard
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Filtros</h5>
+                    <div class="ibox-tools">
+                        <input type="button" value="Filtrar" class="btn btn-primary pull-right" onclick="DatosEnergia(); return false;" />
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Empresa</h5>
+                                @Html.DropDownList("EmpresaID", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" }, { "onchange", "javascript:FillSedes(this.value);" } })
+                                @Html.ValidationMessageFor(model => model.EmpresaID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Sede</h5>
+                                @Html.DropDownList("SedeID", null, "(Todas)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" }, { "onchange", "javascript:FillDevices(this.value);" } })
+                                @Html.ValidationMessageFor(model => model.SedeID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-2">
+                                <h5>Medidor</h5>
+                                @Html.DropDownList("DispositivoID", null, "(Todos)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                                @Html.ValidationMessageFor(model => model.DispositivoID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-2">
+                                <h5>Año</h5>
+                                @Html.DropDownList("AnioID", null, "(Todos)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "13" } })
+                                @Html.ValidationMessageFor(model => model.AnioID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-2">
+                                <h5>Mes</h5>
+                                @Html.DropDownList("MesID", null, "(Todos)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                                @Html.ValidationMessageFor(model => model.MesID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-left">Consumo Último Mes</span>
+                    @*<h5>Energia</h5>*@
+                </div>
+                <div class="ibox-content">
+                    <h1 id="consumomes" class="no-margins">0</h1>
+                    @*<div id="ahorromes" class="stat-percent font-bold text-danger">0% <i class="fa fa-bolt"></i></div>
+                        <small>Variación</small>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-left">Ahorro Último Mes</span>
+                    @*<h5>Energia</h5>*@
+                </div>
+                <div class="ibox-content">
+                    <h1 id="ahorromes" class="no-margins">0</h1>
+                    @*<div class="stat-percent font-bold text-navy">2.5<i class="fa fa-level-up"></i></div>
+                        <small>Variación</small>*@
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-left">Ahorro Acumulado</span>
+                    @*<h5>Costo</h5>*@
+                </div>
+                <div class="ibox-content">
+                    <h1 id="ahorroanual" class="no-margins"></h1>
+                    @*<div class="stat-percent font-bold text-danger">-6.4% <i class="fa fa-bolt"></i></div>
+                        <small>Variación</small>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-left">Porcentaje de Ahorro Acumulado</span>
+                    @*<h5>Costo</h5>*@
+                </div>
+                <div class="ibox-content">
+                    <h1 id="porcentajeahorro" class="no-margins">0</h1>
+                    @*<div class="stat-percent font-bold text-navy">16% <i class="fa fa-level-up"></i></div>
+                        <small>Variación</small>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div>
+                        <h3 class="font-bold no-margins">
+                            Consumo
+                        </h3>
+                        <small>(De acuerdo a filtros seleccionados)</small>
+                    </div>
+
+                    @*<div class="m-t-sm">
+                        <div class="row">
+                            <div class="col-md-6">*@
+                                <div id="GraficoConsumo">
+                                    <canvas id="ChartConsumo" height="200"></canvas>
+                                </div>
+                            @*</div>
+                        </div>
+
+                    </div>*@
+                    @*<div class="m-t-md">
+                        <small>
+                            <strong>Promedio últimos 6 meses:</strong> 221 Kw/h
+                        </small>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div>
+                        <span class="pull-right text-right">
+                        </span>
+                        <h3 class="font-bold no-margins">
+                            Ahorro Acumulado
+                        </h3>
+                        <small>(De acuerdo a filtros seleccionados)</small>
+                    </div>
+
+                    @*<div class="m-t-sm">
+                        <div class="row">
+                            <div class="col-md-8">*@
+                                <div id="GraficoAhorro">
+                                    <canvas id="ChartAhorro"></canvas>
+                                </div>
+                            @*</div>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/bundles/bootstrapselect/css/")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrapselect")
+    @Scripts.Render("~/plugins/flot")
+    @Scripts.Render("~/plugins/chartJs")
+    @Scripts.Render("~/plugins/peity")
+
+    <script type="text/javascript">
+
+        var lineOptions = {
+            responsive: true
+        };
+
+        var OptionsAhorro = {
+            responsive: true,
+            bezierCurve : false,
+            line: {
+                tension: 0
+            }
+        };
+
+        function DatosEnergia() {
+
+            var empresaID = $('#EmpresaID').val();
+            var anoID = $('#AnioID').val();
+            var mesID = $('#MesID').val();
+            var sedeID = $('#SedeID').val();
+            var dispositivoID = $('#DispositivoID').val();
+            var fuenteID = $('#FuenteID').val();;
+
+            if (anoID == "") { anoID = 0; }
+            if (mesID == "") { mesID = 0; }
+            if (sedeID == "") { sedeID = 0; }
+            if (dispositivoID == "") { dispositivoID = 0; }
+            if (fuenteID == "") { fuenteID = 0; }
+
+            $('#ChartConsumo').remove()
+            $('#GraficoConsumo').append('<canvas id="ChartConsumo" height="200"><canvas>');
+
+            $('#ChartAhorro').remove()
+            $('#GraficoAhorro').append('<canvas id="ChartAhorro" height="200"><canvas>');
+
+            $.ajax({
+                url: '@Url.Action("DashboardConsumos")',
+                data: { anio: anoID, mes: mesID, empresa: empresaID, sede: sedeID, dispositivo: dispositivoID, fuente: fuenteID },
+                success: function (datadb) {
+                    if (datadb) {
+                        if (datadb.success) {
+                            var i = JSON.parse(datadb.datosindicadores);
+
+                            $("#consumomes").html(i[0].ConsumoMesS);
+                            $("#ahorromes").html(i[0].AhorroMesS);
+                            $("#ahorroanual").html(i[0].AhorroAnualS);
+                            $("#porcentajeahorro").html(i[0].PorcentajeAhorroS);
+
+                            var ctxe = document.getElementById("ChartConsumo").getContext("2d");
+                            new Chart(ctxe, { type: 'line', data: JSON.parse(datadb.datasource), options: lineOptions });
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error ejecutando la consulta de datos. Por favor inténtelo de nuevo.");
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("DashboardAhorro")',
+                data: { anio: anoID, mes: mesID, empresa: empresaID, sede: sedeID, dispositivo: dispositivoID, fuente: fuenteID },
+                success: function (datadb) {
+                    if (datadb) {
+                        if (datadb.success) {
+                            //var i = JSON.parse(datadb.datosindicadores);
+
+                            var ctxe = document.getElementById("ChartAhorro").getContext("2d");
+                            new Chart(ctxe, { type: 'line', data: JSON.parse(datadb.datasource), options: OptionsAhorro });
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error ejecutando la consulta de datos. Por favor inténtelo de nuevo.");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $("span.pie").peity("pie", {
+                fill: ['#1ab394', '#d7d7d7', '#ffffff']
+            })
+
+            DatosEnergia();
+
+        });
+
+        function FillSedes(_empresaID) {
+
+            if (_empresaID == "") { _empresaID = "999999"; }
+
+            if (_empresaID) {
+                var procemessage = "<option value='0'> Consultando ...</option>";
+                $("#sedeID").html(procemessage).show().selectpicker('refresh');
+
+                $.ajax({
+                    url: '@Url.Action("GetSedesByEmpresaID", "Sedes")',
+                    data: { empresaID: _empresaID },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        if (data) {
+                            if (data.Success) {
+                                var markup = "<option value='0'>Seleccione Sede</option>";
+                                for (var x = 0; x < data.List.length; x++) {
+                                    markup += "<option value=" + data.List[x].Value + ">" + data.List[x].Text + "</option>";
+                                }
+                                $("#SedeID").html(markup).selectpicker('refresh');
+                            }
+                        }
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+        }
+
+        function FillDevices(_sedeID) {
+
+            if (_sedeID == "") { _sedeID = "999999"; }
+
+            if (_sedeID) {
+                var procemessage = "<option value='0'> Consultando ...</option>";
+                $("#DispositivoID").html(procemessage).show().selectpicker('refresh');
+
+                $.ajax({
+                    url: '@Url.Action("GetDeviceBySedeId", "Consumos")',
+                    data: { sedeID: _sedeID },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        if (data) {
+                            if (data.Success) {
+                                var markup = "<option value='0'>Seleccione Medidor</option>";
+                                for (var x = 0; x < data.List.length; x++) {
+                                    markup += "<option value=" + data.List[x].Value + ">" + data.List[x].Text + "</option>";
+                                }
+                                $("#DispositivoID").html(markup).selectpicker('refresh');
+                            }
+                        }
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+        }
+
+    </script>
+}

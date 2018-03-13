@@ -1,0 +1,96 @@
+﻿
+@model EficienciaEnergetica.Models.Peticion
+
+@{
+    ViewBag.Title = "Petición";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Petición</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Empresa.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Empresa.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaRegistro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaRegistro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoPeticion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoPeticion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaSolucion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaSolucion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Solucion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Solucion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ResueltaPor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ResueltaPor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserID)
+        </dd>
+
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.PeticionID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+

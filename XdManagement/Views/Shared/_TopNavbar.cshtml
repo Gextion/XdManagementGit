@@ -1,0 +1,37 @@
+﻿<div class="row border-bottom">
+    <nav class="navbar navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+            <ul class="nav navbar-top-links navbar-left">
+                <li>
+                    <a href="@Url.Action("Dashboard", "Dashboards")">
+                        <i class="fa fa-home"></i> Inicio
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            @*<li>
+                <a>Soporte
+                    <i class="fa fa-phone"></i> (350) 744-03-39
+                </a>
+            </li>
+            <li>
+                <a href="https://dyalogo.net/a/svrs/chat.jsf?id=22​" target="_blank">
+                    <i class="fa fa-comment-o"></i> Chat
+                </a>
+            </li>*@
+
+            <li>
+                <a href="/account/edit/@EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.Id">
+                    <i class="fa fa-user"></i> Perfil
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("LogOff", "Authentication")">
+                    <i class="fa fa-sign-out"></i> Cerrar Sesión
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,39 @@
+﻿
+@model EficienciaEnergetica.Models.Ciudades
+
+@{
+    ViewBag.Title = "Ciudad";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Ciudad</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Ciudad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ciudad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NivelTermico.NombreNivelTermico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NivelTermico.NombreNivelTermico)
+        </dd>
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.CiudadID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+

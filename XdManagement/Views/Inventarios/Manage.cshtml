@@ -1,0 +1,799 @@
+﻿@model EficienciaEnergetica.Models.Inventario
+
+@{
+    ViewBag.Title = "Nuevo Inventario";
+}
+
+<style>
+    .input-group-addon {
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-top: -6px;
+    }
+</style>
+<br />
+
+@using (Html.BeginForm("Save", "Inventarios", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row" style="margin-top: -10px;">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="ibox-title">
+                        <h2>Inventario de Equipo Electrico</h2>
+                        <table class="pull-right" style="margin-top:-40px;">
+                            <tr>
+                                <td><input type="button" value="Regresar a la lista" class="btn btn-primary" onclick="location.href='@Url.Action("Index")'" /></td>
+                                <td style="width: 5px;"></td>
+                                <td><input type="submit" value="Guardar" class="btn btn-primary btn-md" /></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @Html.ValidationSummary(true, "Advertencias: ", new { @class = "text-danger" })
+
+                    @Html.HiddenFor(model => model.IsSaved)
+                    @Html.HiddenFor(model => model.InventarioSedeID)
+                    @Html.Hidden("InventarioEquipoID")
+                    @Html.Hidden("AccionSedeID")
+                    @Html.Hidden("EditMode")
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Fecha, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AsesorID, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("AsesorID", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                                @Html.ValidationMessageFor(model => model.AsesorID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        @if (EficienciaEnergetica.Helpers.ApplicationContext.CurrentUser.IsSuperAdmin)
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.EmpresaID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("EmpresaID", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" }, { "onchange", "javascript:FillSedes(this.value);" } })
+                                    @Html.ValidationMessageFor(model => model.EmpresaID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SedeID, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("SedeID", null, "(Seleccione Sede)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                                @Html.ValidationMessageFor(model => model.SedeID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PrestadoraServicio, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.PrestadoraServicio, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.PrestadoraServicio, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Consumo, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Consumo, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.Consumo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MetrosCuadrados, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.MetrosCuadrados, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.MetrosCuadrados, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ValorKWH, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.ValorKWH, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.ValorKWH, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.HorasSemana, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.HorasSemana, new { htmlAttributes = new { @class = "form-control", @style = "text-align: right;", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.HorasSemana, "", new { @class = "text-danger" })
+                        </div>
+
+                        @Html.LabelFor(model => model.HorasSabado, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.HorasSabado, new { htmlAttributes = new { @class = "form-control", @style = "text-align: right;", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.HorasSabado, "", new { @class = "text-danger" })
+                        </div>
+
+                        @Html.LabelFor(model => model.HorasDomingo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.HorasDomingo, new { htmlAttributes = new { @class = "form-control", @style = "text-align: right;", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.HorasDomingo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="form-group">
+                        <div class="col-md-8">
+                            <div class="ibox-title">
+                                <h2>Equipos</h2>
+                                <table class="pull-right" style="margin-top:-40px;">
+                                    <tr>
+                                        <td><input type="button" value="Nuevo Equipo" class="btn btn-primary" onclick="AddNewEquipo(); return false;" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="content">
+                                <div class="table-responsive">
+                                    <table id="tblDetail" class="table table-striped table-bordered table-hover dataTables-example">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Equipo</th>
+                                                <th>Consumo</th>
+                                                <th>UNDS</th>
+                                                <th>Semana</th>
+                                                <th>Sábado</th>
+                                                <th>Domingo</th>
+                                                <th>Mes</th>
+                                                <th align="center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.InventarioEquipos != null)
+                                            {
+                                                foreach (var item in Model.InventarioEquipos)
+                                                {
+                                                    <tr id="@("del"+item.InventarioEquipoID)">
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Equipos.TipoEquipo.NombreTipoEquipo)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Equipos.DescripcionEquipo)
+                                                        </td>
+                                                        <td align="right">
+                                                            @Html.DisplayFor(modelItem => item.Equipos.Consumo)
+                                                        </td>
+                                                        <td align="right">
+                                                            @Html.DisplayFor(modelItem => item.Cantidad)
+                                                        </td>
+                                                        <td align="right">
+                                                            @Html.DisplayFor(modelItem => item.ConsumoSemana)
+                                                        </td>
+                                                        <td align="right">
+                                                            @Html.DisplayFor(modelItem => item.ConsumoSabado)
+                                                        </td>
+                                                        <td align="right">
+                                                            @Html.DisplayFor(modelItem => item.ConsumoDomingo)
+                                                        </td>
+                                                        <td align="right">
+                                                            @Html.DisplayFor(modelItem => item.ConsumoMes)
+                                                        </td>
+                                                        <td align="center">
+                                                            <a class="fa fa-pencil-square-o" href="#" title="Editar" onclick="EditEquipo(@item.InventarioEquipoID); return false;"></a> |
+                                                            <a class="fa fa-trash-o" href="#" data-backdrop="static" data-href="Petición Id=@item.InventarioEquipoID" data-pkid="@item.InventarioEquipoID" data-toggle="modal" data-target="#confirm-delete" title="Eliminar"></a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="ibox-title">
+                                <h2>Acciones Ahorro</h2>
+                                <table class="pull-right" style="margin-top:-40px;">
+                                    <tr>
+                                        <td><input type="button" value="Nueva Acción" class="btn btn-primary" onclick="AddNewAction(); return false;" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="content">
+                                <div class="table-responsive">
+                                    <table id="tblDetailActions" class="table table-striped table-bordered table-hover dataTables-example">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Ahorro</th>
+                                                <th align="center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.AccionesAhorroSedes != null)
+                                            {
+                                                foreach (var item in Model.AccionesAhorroSedes)
+                                                {
+                                                    <tr id="@("act"+item.AccionSedeID)">
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.TiposEquipos.NombreTipoEquipo)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.AccionAhorro.DescripcionAccionAhorro)
+                                                        </td>
+                                                        <td align="center">
+                                                            <a class="fa fa-trash-o" href="#" data-backdrop="static" data-href="" data-pkid="@item.AccionSedeID" data-toggle="modal" data-target="#confirm-delete-action" title="Eliminar"></a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirmar Eliminación de Equipo</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>Estás a punto de eliminar un registro, este procedimiento es irreversible.</p>
+                <p>¿Quieres proceder?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <a id="btnDelete" class="btn btn-danger btn-ok" data-dismiss="modal">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirm-delete-action" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirmar Eliminación de Acciones</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>Estás a punto de eliminar un registro, este procedimiento es irreversible.</p>
+                <p>¿Quieres proceder?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <a id="btnDeleteAction" class="btn btn-danger btn-ok" data-dismiss="modal">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="record-manager" tabindex="-1" role="dialog" aria-labelledby="RecordModalLabelEquipo" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="RecordModalLabelEquipo">Nuevo Equipo</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row wrapper">
+                    <div class="col-md-12">
+                        <div class="form-group" id="EquiposTipoEq">
+                            @Html.Label("Tipo", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-cogs"></i></span>
+                                    @Html.DropDownList("ItemTiposEquipos", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" }, { "onchange", "javascript:FillEquipoByTipo(this.value);" } })
+                                    @Html.ValidationMessageFor(model => model.ItemTiposEquipos, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 5px;" id="EquiposEq">
+                            @Html.Label("Equipo", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-cog"></i></span>
+                                    @Html.DropDownList("ItemEquipoID", null, "(Seleccione Equipo)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                                    @Html.ValidationMessageFor(model => model.ItemEquipoID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 7px;">
+                            @Html.Label("Cantidad", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-bullseye"></i></span>
+                                    @Html.EditorFor(model => model.ItemCantidad, new { htmlAttributes = new { @class = "form-control", @style = "text-align: right;", @type = "number" } })
+                                    @Html.ValidationMessageFor(model => model.ItemCantidad, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <a id="btnAdd" class="btn btn-primary btn-ok">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="saving-manager" tabindex="-1" role="dialog" aria-labelledby="RecordModalLabelAction" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="RecordModalLabelAction">Nueva Acción de Ahorro</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row wrapper">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.Label("Tipo", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-cogs"></i></span>
+                                    @Html.DropDownList("ItemTiposEquiposAction", null, new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" }, { "onchange", "javascript:FillAccionesByTipo(this.value);" } })
+                                    @Html.ValidationMessageFor(model => model.ItemTiposEquiposAction, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 5px;">
+                            @Html.Label("Acción", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-cog"></i></span>
+                                    @Html.DropDownList("ItemAccionesAhorro", null, "(Seleccione Acción)", new Dictionary<string, Object> { { "class", "selectpicker show-tick form-control" }, { "data-live-search", "true" }, { "data-size", "10" } })
+                                    @Html.ValidationMessageFor(model => model.ItemAccionesAhorro, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <a id="btnAddSaving" class="btn btn-primary btn-ok">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    @Styles.Render("~/bundles/bootstrapselect/css/")
+    @Styles.Render("~/bundles/bootstrapdialog/css")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrapselect")
+    @Scripts.Render("~/bundles/bootstrapdialog")
+}
+
+<script type="text/javascript">
+
+    (function ($) {
+        $.fn.invisible = function () {
+            return this.each(function () {
+                $(this).css("visibility", "hidden");
+            });
+        };
+        $.fn.visible = function () {
+            return this.each(function () {
+                $(this).css("visibility", "visible");
+            });
+        };
+    }(jQuery));
+
+    $(document).on('show.bs.modal', '#confirm-delete', function (e) {
+        $('#btnDelete').attr('onclick', 'deleteEquipo(' + $(e.relatedTarget).data('pkid') + ');');
+    })
+
+    $(document).on('show.bs.modal', '#confirm-delete-action', function (e) {
+        $('#btnDeleteAction').attr('onclick', 'deleteActions(' + $(e.relatedTarget).data('pkid') + ');');
+    })
+
+    $(document).on('show.bs.modal', '#record-manager', function (e) {
+        $('#btnAdd').attr('onclick', 'SaveNewEquipo();');
+    })
+
+    $(document).on('show.bs.modal', '#saving-manager', function (e) {
+        $('#btnAddSaving').attr('onclick', 'SaveSavingAction();');
+    })
+
+    function EditEquipo(_InvEqID) {
+        if (_InvEqID) {
+
+            $('#InventarioEquipoID').val(_InvEqID);
+            $('#EditMode').val('1');
+
+            $.ajax({
+                url: '@Url.Action("GetEquiposRowDetail")',
+                data: { InvEqID: _InvEqID },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            $('#RecordModalLabelEquipo').text('Editar Equipo');
+
+                            $("#EquiposTipoEq").invisible();
+                            $("#EquiposEq").invisible();
+
+                            $('#ItemTiposEquipos').val(data.TipEqID);
+                            $('#ItemEquipoID').val(data.EqID);
+                            $('#ItemCantidad').val(data.Can);
+
+                            $('#record-manager').modal('show');
+                        }
+                        else {
+                            alert(data.Message);
+                        }
+                    }
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+    }
+
+    function deleteEquipo(idF) {
+        $.ajax({
+            url: '@Url.Action("DeleteEquipo")',
+            data: { id: idF },
+            success: function (data) {
+                if (data) {
+                    if (!data.Success) {
+                        BootstrapDialog.show({ title: 'Eliminación', message: data.Message });
+                    }
+                    else {
+                        $("#del" + idF).fadeOut("normal", function () { $(this).remove(); });
+                    }
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error ejecutando la acción de eliminar. Por favor inténtelo de nuevo.");
+            }
+        });
+    }
+
+    function deleteActions(idF) {
+        if (idF) {
+            $.ajax({
+                url: '@Url.Action("DeleteActions")',
+                data: { id: idF },
+                success: function (data) {
+                    if (data) {
+                        if (!data.Success) {
+                            BootstrapDialog.show({ title: 'Eliminación', message: data.Message });
+                        }
+                        else {
+                            $("#act" + idF).fadeOut("normal", function () { $(this).remove(); });
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error ejecutando la acción de eliminar. Por favor inténtelo de nuevo.");
+                }
+            });
+        }
+    }
+
+    function SaveSavingAction() {
+        var InEditMode = $('#EditMode').val();
+        if (InEditMode == '1') {
+            SaveEditedRecord();
+            return;
+        }
+
+        var _tipEquipoID = $('#ItemTiposEquiposAction').val();
+        var _actionID = $('#ItemAccionesAhorro').val();
+
+        if (!_tipEquipoID || _tipEquipoID == 0) {
+            alert('Seleccione un tipo de producto');
+            return;
+        }
+
+        if (!_actionID || _actionID == 0) {
+            alert('Seleccione una acción de ahorro');
+            return;
+        }
+
+        var _model = { PkID: "" + $('#InventarioSedeID').val() + "", IsSaved: "" + $('#IsSaved').val() + "", Fec: "" + $('#Fecha').val() + "", EmpID: "" + $('#EmpresaID').val() + "", SedeID: "" + $('#SedeID').val() + "", AsesID: "" + $('#AsesorID').val() + "", PrestardoraServ: "" + $('#PrestadoraServicio').val() + "", Cons: "" + $('#Consumo').val() + "", ValK: "" + $('#ValorKWH').val() + "", MetCua: "" + $('#MetrosCuadrados').val() + "", HorSem: "" + $('#HorasSemana').val() + "", HorSab: "" + $('#HorasSabado').val() + "", HorDom: "" + $('#HorasDomingo').val() + "", TipEq: "" + _tipEquipoID + "", Act: "" + _actionID + "" };
+
+        $.ajax({
+            url: '@Url.Action("SaveNewAction")',
+            data: JSON.stringify(_model),
+            cache: false,
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                if (data) {
+                    if (data.Success) {
+                        $('#saving-manager').modal('toggle');
+
+                        if ($('#IsSaved').val() == 'False' || $('#IsSaved').val() == 'false') {
+                            window.location.href = "/inventarios/manage/" + data.CotID;
+                        }
+                        else {
+                            $("#tblDetailActions tbody").append(data.Message);
+                        }
+                    }
+                    else {
+                        alert(data.Message);
+                    }
+                }
+                else {
+                    alert('Por favor inténtelo de nuevo.');
+                }
+            },
+            error: function (reponse) {
+                alert('Error ejecutando la acción. Por favor inténtelo de nuevo.');
+            }
+        });
+    }
+
+    function SaveNewEquipo() {
+
+        var InEditMode = $('#EditMode').val();
+        if (InEditMode == '1') {
+            SaveEditedEquipo();
+            return;
+        }
+
+        var _tipEquipoID = $('#ItemTiposEquipos').val();
+        var _equipoID = $('#ItemEquipoID').val();
+        var _Can = $('#ItemCantidad').val();
+
+        if (!_tipEquipoID || _tipEquipoID == 0) {
+            alert('Seleccione un tipo de producto');
+            return;
+        }
+
+        if (!_equipoID || _equipoID == 0) {
+            alert('Seleccione un equipo');
+            return;
+        }
+
+        if (_Can == 0) {
+            alert('Ingrese una cantidad');
+            return;
+        }
+
+        var _model = { PkID: "" + $('#InventarioSedeID').val() + "", IsSaved: "" + $('#IsSaved').val() + "", Fec: "" + $('#Fecha').val() + "", EmpID: "" + $('#EmpresaID').val() + "", SedeID: "" + $('#SedeID').val() + "", AsesID: "" + $('#AsesorID').val() + "", PrestardoraServ: "" + $('#PrestadoraServicio').val() + "", Cons: "" + $('#Consumo').val() + "", ValK: "" + $('#ValorKWH').val() + "", MetCua: "" + $('#MetrosCuadrados').val() + "", HorSem: "" + $('#HorasSemana').val() + "", HorSab: "" + $('#HorasSabado').val() + "", HorDom: "" + $('#HorasDomingo').val() + "", TipEq: "" + _tipEquipoID + "", EqID: "" + _equipoID + "", Can: "" + _Can + "" };
+
+        $.ajax({
+            url: '@Url.Action("SaveNewEq")',
+            data: JSON.stringify(_model),
+            cache: false,
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                if (data) {
+                    if (data.Success) {
+                        $('#record-manager').modal('toggle');
+
+                        if ($('#IsSaved').val() == 'False' || $('#IsSaved').val() == 'false') {
+                            window.location.href = "/inventarios/manage/" + data.CotID;
+                        }
+                        else {
+                            $("#tblDetail tbody").append(data.Message);
+                        }
+                    }
+                    else {
+                        alert(data.Message);
+                    }
+                }
+                else {
+                    alert('Por favor inténtelo de nuevo.');
+                }
+            },
+            error: function (reponse) {
+                alert('Error ejecutando la acción. Por favor inténtelo de nuevo.');
+            }
+        });
+    }
+
+    function SaveEditedEquipo() {
+
+        var _invEqID = $('#InventarioEquipoID').val();
+        var _Can = $('#ItemCantidad').val();
+
+        if (_invEqID && _Can) {
+            $.ajax({
+                url: '@Url.Action("UpdateEquipoDetail")',
+                data: { invEqID: _invEqID, can: _Can },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            $("#del" + _invEqID).replaceWith(data.Message);
+                            $('#record-manager').modal('toggle');
+
+                            $('#EditMode').val('0');
+                        }
+                        else {
+                            alert(data.Message);
+                        }
+                    }
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+        else {
+            alert('No se reconoce un valor válido. Por fvor, intente de nuevo');
+        }
+    }
+
+    function FillAccionesByTipo(_tipoEquipoID) {
+        if (_tipoEquipoID) {
+
+            var procemessage = "<option value='0'> Consultando ... </option>";
+            $("#ItemAccionesAhorro").html(procemessage).show().selectpicker('refresh');
+
+            $.ajax({
+                url: '@Url.Action("GetAccionesByTipoID")',
+                data: { tipoEquipoID: _tipoEquipoID },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            var markup = "<option value='0'>(Seleccione Acción)</option>";
+                            for (var x = 0; x < data.List.length; x++) {
+                                markup += "<option value=" + data.List[x].Value + ">" + data.List[x].Text + "</option>";
+                            }
+                            $("#ItemAccionesAhorro").html(markup).selectpicker('refresh');
+                        }
+                    }
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+    }
+
+    function FillEquipoByTipo(_tipoEquipoID) {
+        if (_tipoEquipoID) {
+
+            var procemessage = "<option value='0'> Consultando ... </option>";
+            $("#ItemEquipoID").html(procemessage).show().selectpicker('refresh');
+
+            $.ajax({
+                url: '@Url.Action("GetEquiposByTipoID")',
+                data: { tipoEquipoID: _tipoEquipoID },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            var markup = "<option value='0'>(Seleccione Equipo)</option>";
+                            for (var x = 0; x < data.List.length; x++) {
+                                markup += "<option value=" + data.List[x].Value + ">" + data.List[x].Text + "</option>";
+                            }
+                            $("#ItemEquipoID").html(markup).selectpicker('refresh');
+                        }
+                    }
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+    }
+    function FillSedes(_empID) {
+
+        if (_empID) {
+            var procemessage = "<option value='0'> Consultando ... </option>";
+            $("#SedeID").html(procemessage).show().selectpicker('refresh');
+
+            $.ajax({
+                url: '@Url.Action("GetSedesByEmpId")',
+                data: { empID: _empID },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    if (data) {
+                        if (data.Success) {
+                            var markup = "<option value='0'>Seleccione Sede</option>";
+                            for (var x = 0; x < data.List.length; x++) {
+                                markup += "<option value=" + data.List[x].Value + ">" + data.List[x].Text + "</option>";
+                            }
+                            $("#SedeID").html(markup).selectpicker('refresh');
+                        }
+                    }
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+    }
+
+    function AddNewAction() {
+        var valid = true;
+
+        var sedeID = $('#SedeID').val();
+        var asesorID = $('#AsesorID').val();
+
+        if (sedeID && asesorID && sedeID != 0 && asesorID != 0) {
+            $('#saving-manager').modal('show');
+        }
+        else {
+            alert('Antes de agregar un nuevo equipo, debe diligenciar la información solicitada en el inventario.');
+        }
+    }
+
+    function AddNewEquipo() {
+        var valid = true;
+
+        var sedeID = $('#SedeID').val();
+        var asesorID = $('#AsesorID').val();
+        var _pServicios = $('#PrestadoraServicio').val();
+
+        if (!_pServicios || _pServicios == '') {
+            alert('La empresa prestadora del servicio es obligatoria');
+            return;
+        }
+
+        if (sedeID && asesorID && sedeID != 0 && asesorID != 0) {
+            $('#ItemCantidad').val(1);
+            $('#record-manager').modal('show');
+        }
+        else {
+            alert('Antes de agregar un nuevo equipo, debe diligenciar la información solicitada en el inventario.');
+        }
+    }
+
+</script>

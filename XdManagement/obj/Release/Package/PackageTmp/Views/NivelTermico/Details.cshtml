@@ -1,0 +1,32 @@
+﻿
+@model EficienciaEnergetica.Models.NivelTermico
+
+@{
+    ViewBag.Title = "Nivel Térmico";
+}
+
+<br />
+
+<div class="row wrapper border-bottom white-bg page-headingl">
+
+    <br />
+        <h2>Detalle Nivel Térmico</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreNivelTermico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreNivelTermico)
+        </dd>
+
+    </dl>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.NivelTermicoID }) |
+    @Html.ActionLink("Regresar a la lista", "Index")
+</p>
+
+</div>
+
